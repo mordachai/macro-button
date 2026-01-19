@@ -2,13 +2,13 @@ const MODULE_ID = "macro-button";
 
 // Size configurations
 const BUTTON_SIZES = {
-    small: 48,
+    small: 32,
     medium: 96,
     big: 128
 };
 
 const NAME_SIZES = {
-    small: 32,
+    small: 16,
     medium: 36,
     big: 48
 };
