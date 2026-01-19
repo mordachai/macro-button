@@ -38,7 +38,7 @@ jobs:
           mkdir dist
           
           # Zip the current directory into the dist folder, excluding unnecessary files
-          zip -r dist/module.zip . -x ".*" ".*/*" "dist/*" "node_modules/*"
+          zip -r dist/module.zip . -x ".*" ".*/*" "dist/*" "node_modules/*" "*.md" "LICENSE"
           
           # Copy module.json to dist so it can be uploaded separately
           cp module.json dist/module.json

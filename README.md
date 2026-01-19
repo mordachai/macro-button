@@ -11,6 +11,13 @@
 
 <img width="811" height="495" alt="image" src="https://github.com/user-attachments/assets/edb127df-694f-4cc6-9feb-555e0cc3df2b" />
 
+## Installation
+
+´´´
+https://github.com/mordachai/macro-button/releases/latest/download/module.json
+
+´´´
+
 ## How to Use
 
 ### Creating Buttons
