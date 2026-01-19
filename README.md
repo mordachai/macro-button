@@ -1,6 +1,6 @@
 # Macro Button
 
-**Macro Button** is a module for Foundry VTT that allows you to drag and drop Macros directly onto the canvas to create interactive buttons. These buttons act as shortcuts, allowing you (and optionally your players) to trigger macros directly from the scene.
+**Macro Button** is a module for Foundry VTT that allows you to drag and drop Macros directly onto the canvas to create interactive buttons. These buttons act as shortcuts, allowing you (and optionally your players) to trigger macros directly from the scene. I've picked the idea for it from this old module: https://github.com/Kekilla0/Note-Macro seemed like a good solution.
 
 ## Features
 
