@@ -1,0 +1,89 @@
+<div>
+    <div class="form-group header-group" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <div class="image-container" style="flex: 0 0 64px; height: 64px; cursor: pointer; position: relative;">
+            <img src="{{icon}}" data-action="pickImage" title="Click to replace icon" style="width: 100%; height: 100%; object-fit: contain; border: 1px solid #7a7971; border-radius: 4px; background: rgba(0,0,0,0.5);">
+            <input type="hidden" name="icon" value="{{icon}}">
+            <input type="hidden" name="customIcon" value="{{customIcon}}">
+            <button type="button" data-action="resetIcon" class="reset-icon-btn {{#unless customIcon}}hidden{{/unless}}" title="Reset to macro icon">
+                <i class="fas fa-undo"></i>
+            </button>
+        </div>
+        <div class="form-fields" style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+            <div class="name-input-wrapper">
+                <input type="text" name="name" value="{{name}}" placeholder="Button Name" oninput="this.form.querySelector('input[name=customName]').value='true'; this.parentElement.querySelector('[data-action=resetName]')?.classList.remove('hidden');">
+                <input type="hidden" name="customName" value="{{customName}}">
+                <button type="button" data-action="resetName" class="reset-name-btn {{#unless customName}}hidden{{/unless}}" title="Reset to macro name">
+                    <i class="fas fa-undo"></i>
+                </button>
+            </div>
+            <div style="font-size: 0.8em; color: #666;">Linked Macro: <strong>{{linkedMacroName}}</strong></div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label>Name Visibility</label>
+            <div class="form-fields">
+                <select name="showName">
+                    {{#each showNameOptions}}
+                    <option value="{{value}}" {{#if (eq ../showName value)}}selected{{/if}}>{{label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Name Position</label>
+            <div class="form-fields">
+                <select name="namePosition">
+                    {{#each namePositionOptions}}
+                    <option value="{{value}}" {{#if (eq ../namePosition value)}}selected{{/if}}>{{label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label>Button Size</label>
+            <div class="form-fields">
+                <select name="buttonSize">
+                    {{#each buttonSizeOptions}}
+                    <option value="{{value}}" {{#if (eq ../buttonSize value)}}selected{{/if}}>{{label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Name Size</label>
+            <div class="form-fields">
+                <select name="nameSize">
+                    {{#each nameSizeOptions}}
+                    <option value="{{value}}" {{#if (eq ../nameSize value)}}selected{{/if}}>{{label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group inline-check">
+        <input type="checkbox" name="playerVisible" id="playerVisible" {{#if playerVisible}}checked{{/if}}>
+        <label for="playerVisible">Player Accessible</label>
+    </div>
+
+    <div class="form-footer">
+        <button type="button" data-action="delete" class="delete-btn">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+        <div class="right-buttons">
+            <button type="button" data-action="cancel">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+            <button type="submit" data-action="save">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,111 @@
+.macro-button-config {
+    min-width: 400px;
+}
+
+.macro-button-config .header-group {
+    background: rgba(0, 0, 0, 0.05);
+    border-bottom: 2px solid rgba(121, 121, 121, 0.5);
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+.macro-button-config .image-container:hover img {
+    border: 1px solid #ff6400 !important;
+    box-shadow: 0 0 5px #ff6400;
+}
+
+.macro-button-config .reset-icon-btn {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 10px;
+    background: #444;
+    border: 1px solid #666;
+    cursor: pointer;
+}
+
+.macro-button-config .reset-icon-btn:hover {
+    background: #ff6400;
+    border-color: #ff6400;
+}
+
+.macro-button-config .reset-icon-btn.hidden {
+    display: none;
+}
+
+.macro-button-config .name-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.macro-button-config .name-input-wrapper input[type="text"] {
+    flex: 1;
+    padding-right: 30px;
+}
+
+.macro-button-config .reset-name-btn {
+    position: absolute;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 4px;
+    font-size: 12px;
+    background: #444;
+    border: 1px solid #666;
+    cursor: pointer;
+}
+
+.macro-button-config .reset-name-btn:hover {
+    background: #ff6400;
+    border-color: #ff6400;
+}
+
+.macro-button-config .reset-name-btn.hidden {
+    display: none;
+}
+
+.macro-button-config input[type="text"] {
+    height: 50px;
+}
+
+.macro-button-config .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.macro-button-config .form-row .form-group {
+    flex: 1;
+}
+
+.macro-button-config .inline-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.macro-button-config .inline-check label {
+    margin: 0;
+}
+
+.macro-button-config .form-footer {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.macro-button-config .form-footer .right-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.macro-button-config .form-footer .delete-btn {
+    color: #ff4444;
+}
