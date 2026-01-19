@@ -1,0 +1,56 @@
+name: Release Module
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'module.json'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract Version
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version module.json)
+          echo "Detected version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if tag exists
+        uses: mukunku/tag-exists-action@v1.6.0
+        id: check_tag
+        with:
+          tag: 'v${{ steps.get_version.outputs.version }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release Archive
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          # Create a temporary directory for the artifact
+          mkdir dist
+          
+          # Zip the current directory into the dist folder, excluding unnecessary files
+          zip -r dist/module.zip . -x ".*" ".*/*" "dist/*" "node_modules/*"
+          
+          # Copy module.json to dist so it can be uploaded separately
+          cp module.json dist/module.json
+
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          name: Release v${{ steps.get_version.outputs.version }}
+          tag: v${{ steps.get_version.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: 'dist/module.zip,dist/module.json'
+          body: "Release for version ${{ steps.get_version.outputs.version }}"
+          makeLatest: true
