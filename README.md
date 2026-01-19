@@ -13,10 +13,10 @@
 
 ## Installation
 
-´´´
+```
 https://github.com/mordachai/macro-button/releases/latest/download/module.json
 
-´´´
+```
 
 ## How to Use
 
