@@ -2,7 +2,7 @@
   "id": "macro-button",
   "title": "Macro Button",
   "description": "Drag and drop macros onto the canvas to create interactive buttons Foundry notes.",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
