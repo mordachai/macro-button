@@ -30,6 +30,8 @@
 
 Right-clicking a button (as a GM) opens the configuration dialog where you can adjust:
 
+<img width="427" height="406" alt="image" src="https://github.com/user-attachments/assets/8a20b551-e604-4c94-b01a-59e2b0539577" />
+
 *   **Icon**: Click the image to upload or select a custom icon.
 *   **Name**: Type a custom label for the button.
 *   **Reset Buttons**: If you've customized the name or icon, a small **Reset** (undo) button will appear. Clicking it restores the button's name or icon to match the original Macro.
