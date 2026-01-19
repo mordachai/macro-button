@@ -2,13 +2,15 @@ const MODULE_ID = "macro-button";
 
 // Size configurations
 const BUTTON_SIZES = {
+    tiny: 16,
     small: 32,
     medium: 96,
     big: 128
 };
 
 const NAME_SIZES = {
-    small: 16,
+    tiny: 18,
+    small: 24,
     medium: 36,
     big: 48
 };
@@ -430,11 +432,13 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
                 { value: "right", label: "Right" }
             ],
             buttonSizeOptions: [
+                { value: "tiny", label: "Tiny" },
                 { value: "small", label: "Small" },
                 { value: "medium", label: "Medium" },
                 { value: "big", label: "Big" }
             ],
             nameSizeOptions: [
+                { value: "tiny", label: "Tiny" },
                 { value: "small", label: "Small" },
                 { value: "medium", label: "Medium" },
                 { value: "big", label: "Big" }
