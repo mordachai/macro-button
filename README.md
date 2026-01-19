@@ -9,6 +9,8 @@
 *   **Permissions**: Grant players access to specific macro buttons.
 *   **Sync**: Button states and updates are synchronized across all connected clients.
 
+<img width="811" height="495" alt="image" src="https://github.com/user-attachments/assets/edb127df-694f-4cc6-9feb-555e0cc3df2b" />
+
 ## How to Use
 
 ### Creating Buttons
