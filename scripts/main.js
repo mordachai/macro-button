@@ -2,22 +2,87 @@ const MODULE_ID = "macro-button";
 
 // Size configurations
 const BUTTON_SIZES = {
-    tiny: 16,
     small: 32,
-    medium: 96,
-    big: 128
+    medium: 64,
+    big: 96
 };
 
 const NAME_SIZES = {
-    tiny: 18,
     small: 24,
     medium: 36,
-    big: 48
+    big: 60
 };
 
 // Register Handlebars helper for equality check
 Hooks.once("init", () => {
     Handlebars.registerHelper("eq", (a, b) => a === b);
+
+    // Register module settings for default values
+    game.settings.register(MODULE_ID, "defaultShowName", {
+        name: "Default Show Name",
+        hint: "Default setting for showing button names",
+        scope: "world",
+        config: true,
+        type: String,
+        default: "always",
+        choices: {
+            always: "Always",
+            never: "Never",
+            hover: "On Hover"
+        }
+    });
+
+    game.settings.register(MODULE_ID, "defaultNamePosition", {
+        name: "Default Name Position",
+        hint: "Default position for button names",
+        scope: "world",
+        config: true,
+        type: String,
+        default: "right",
+        choices: {
+            top: "Above",
+            bottom: "Below",
+            left: "Left",
+            right: "Right"
+        }
+    });
+
+    game.settings.register(MODULE_ID, "defaultButtonSize", {
+        name: "Default Button Size",
+        hint: "Default size for new macro buttons",
+        scope: "world",
+        config: true,
+        type: String,
+        default: "small",
+        choices: {
+            small: "Small",
+            medium: "Medium",
+            big: "Big"
+        }
+    });
+
+    game.settings.register(MODULE_ID, "defaultNameSize", {
+        name: "Default Name Size",
+        hint: "Default text size for button names",
+        scope: "world",
+        config: true,
+        type: String,
+        default: "small",
+        choices: {
+            small: "Small",
+            medium: "Medium",
+            big: "Big"
+        }
+    });
+
+    game.settings.register(MODULE_ID, "defaultPlayerVisible", {
+        name: "Default Player Visibility",
+        hint: "Whether new buttons are visible to players by default",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false
+    });
 });
 
 // Socket for cross-client communication
@@ -82,22 +147,25 @@ Hooks.on("dropCanvasData", async (canvas, data) => {
         return;
     }
 
+    // Get default values from settings
+    const defaultButtonSize = game.settings.get(MODULE_ID, "defaultButtonSize");
+
     const noteData = {
         x: data.x,
         y: data.y,
         texture: { src: macro.img || "icons/svg/dice-target.svg" },
-        iconSize: BUTTON_SIZES.small,
+        iconSize: BUTTON_SIZES[defaultButtonSize] || BUTTON_SIZES.small,
         text: " ",
         flags: {
             [MODULE_ID]: {
                 isMacroButton: true,
                 macroUuid: data.uuid,
                 name: macro.name,
-                showName: "always",
-                namePosition: "right",
-                buttonSize: "small",
-                nameSize: "small",
-                playerVisible: false,
+                showName: game.settings.get(MODULE_ID, "defaultShowName"),
+                namePosition: game.settings.get(MODULE_ID, "defaultNamePosition"),
+                buttonSize: defaultButtonSize,
+                nameSize: game.settings.get(MODULE_ID, "defaultNameSize"),
+                playerVisible: game.settings.get(MODULE_ID, "defaultPlayerVisible"),
                 customIcon: false,
                 customName: false
             }
@@ -432,13 +500,11 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
                 { value: "right", label: "Right" }
             ],
             buttonSizeOptions: [
-                { value: "tiny", label: "Tiny" },
                 { value: "small", label: "Small" },
                 { value: "medium", label: "Medium" },
                 { value: "big", label: "Big" }
             ],
             nameSizeOptions: [
-                { value: "tiny", label: "Tiny" },
                 { value: "small", label: "Small" },
                 { value: "medium", label: "Medium" },
                 { value: "big", label: "Big" }
