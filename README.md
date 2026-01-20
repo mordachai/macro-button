@@ -56,6 +56,16 @@ Right-clicking a button (as a GM) opens the configuration dialog where you can a
 *   **Name Size**: Adjust the text size (Small, Medium, Big).
 *   **Player Visible**: Check this to allow players to see and click the button. (Default is GM only).
 
+### Linking Multiple Macros
+
+Buttons can execute multiple macros in sequence. The **Linked Macros** section in the configuration dialog shows all macros currently linked to the button as clickable content links.
+
+*   **Adding Macros**: Drag and drop macros from your Macro Directory onto the Linked Macros section to add them.
+*   **Viewing Macros**: Click any linked macro name to open its sheet.
+*   **Removing Macros**: Click the **X** button next to a macro to unlink it from the button.
+*   **Execution Order**: When the button is clicked, all linked macros execute in the order they appear (top to bottom).
+*   **Icon/Name Sync**: The button's icon and name sync with the *first* macro in the list (unless customized).
+
 ## License
 
 This project is licensed under the MIT License.
