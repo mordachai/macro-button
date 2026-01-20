@@ -16,8 +16,26 @@
                     <i class="fas fa-undo"></i>
                 </button>
             </div>
-            <div style="font-size: 0.8em; color: #666;">Linked Macro: <strong>{{linkedMacroName}}</strong></div>
         </div>
+    </div>
+
+    <div class="linked-macros-section">
+        <label><i class="fas fa-code"></i> Linked Macros</label>
+        <div class="linked-macros-list">
+            {{#if hasMacros}}
+                {{#each linkedMacros}}
+                <div class="linked-macro-item" data-uuid="{{uuid}}">
+                    <div class="macro-link">{{{enrichedLink}}}</div>
+                    <button type="button" class="unlink-btn" data-action="unlinkMacro" data-uuid="{{uuid}}" title="Unlink this macro">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                {{/each}}
+            {{else}}
+                <div class="no-macros-hint">No macros linked</div>
+            {{/if}}
+        </div>
+        <div class="drop-hint"><i class="fas fa-plus-circle"></i> Drag macros here to link them</div>
     </div>
 
     <div class="form-row">

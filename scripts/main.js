@@ -137,6 +137,20 @@ Hooks.once("init", async () => {
     ]);
 });
 
+/**
+ * Get macro UUIDs from flags, handling migration from old single macroUuid format
+ */
+function getMacroUuids(flags) {
+    if (flags.macroUuids && Array.isArray(flags.macroUuids)) {
+        return flags.macroUuids;
+    }
+    // Migration from old single macroUuid format
+    if (flags.macroUuid) {
+        return [flags.macroUuid];
+    }
+    return [];
+}
+
 // Handle macro drops on canvas
 Hooks.on("dropCanvasData", async (canvas, data) => {
     if (data.type !== "Macro") return;
@@ -159,7 +173,7 @@ Hooks.on("dropCanvasData", async (canvas, data) => {
         flags: {
             [MODULE_ID]: {
                 isMacroButton: true,
-                macroUuid: data.uuid,
+                macroUuids: [data.uuid],
                 name: macro.name,
                 showName: game.settings.get(MODULE_ID, "defaultShowName"),
                 namePosition: game.settings.get(MODULE_ID, "defaultNamePosition"),
@@ -183,18 +197,24 @@ Hooks.on("updateMacro", async (macro, changes) => {
     const macroUuid = macro.uuid;
     const linkedNotes = canvas.scene.notes.filter(note => {
         const flags = note.flags?.[MODULE_ID];
-        return flags?.isMacroButton && flags?.macroUuid === macroUuid;
+        if (!flags?.isMacroButton) return false;
+        const uuids = getMacroUuids(flags);
+        return uuids.includes(macroUuid);
     });
 
     for (const note of linkedNotes) {
         const flags = note.flags?.[MODULE_ID];
+        const uuids = getMacroUuids(flags);
         const updates = {};
 
-        if (changes.img && !flags?.customIcon) {
-            updates["texture.src"] = macro.img;
-        }
-        if (changes.name && !flags?.customName) {
-            updates[`flags.${MODULE_ID}.name`] = macro.name;
+        // Only sync icon/name if this is the first (primary) macro
+        if (uuids[0] === macroUuid) {
+            if (changes.img && !flags?.customIcon) {
+                updates["texture.src"] = macro.img;
+            }
+            if (changes.name && !flags?.customName) {
+                updates[`flags.${MODULE_ID}.name`] = macro.name;
+            }
         }
 
         if (Object.keys(updates).length > 0) {
@@ -309,12 +329,20 @@ Hooks.on("refreshNote", (note) => {
 
             event.stopPropagation();
 
-            // Execute the macro
-            const macro = await fromUuid(flags.macroUuid);
-            if (macro) {
-                await macro.execute();
-            } else {
-                ui.notifications.error("Linked macro not found.");
+            // Execute all linked macros
+            const macroUuids = getMacroUuids(flags);
+            if (macroUuids.length === 0) {
+                ui.notifications.warn("No macros linked to this button.");
+                return;
+            }
+
+            for (const uuid of macroUuids) {
+                const macro = await fromUuid(uuid);
+                if (macro) {
+                    await macro.execute();
+                } else {
+                    ui.notifications.error(`Linked macro not found: ${uuid}`);
+                }
             }
         });
 
@@ -461,6 +489,7 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
             pickImage: MacroButtonConfig.#onPickImage,
             resetIcon: MacroButtonConfig.#onResetIcon,
             resetName: MacroButtonConfig.#onResetName,
+            unlinkMacro: MacroButtonConfig.#onUnlinkMacro,
             save: MacroButtonConfig.#onSave,
             cancel: MacroButtonConfig.#onCancel,
             delete: MacroButtonConfig.#onDelete
@@ -475,12 +504,37 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
 
     async _prepareContext(options) {
         const flags = this.noteDocument.flags[MODULE_ID] || {};
-        const macro = await fromUuid(flags.macroUuid);
+        const macroUuids = getMacroUuids(flags);
+
+        // Build enriched HTML for each linked macro
+        const linkedMacros = [];
+        for (const uuid of macroUuids) {
+            const macro = await fromUuid(uuid);
+            if (macro) {
+                // Create enriched content link using TextEditor
+                const enrichedLink = await TextEditor.enrichHTML(`@UUID[${uuid}]`, { async: true });
+                linkedMacros.push({
+                    uuid: uuid,
+                    name: macro.name,
+                    img: macro.img || "icons/svg/dice-target.svg",
+                    enrichedLink: enrichedLink
+                });
+            } else {
+                // Handle broken links
+                linkedMacros.push({
+                    uuid: uuid,
+                    name: "Unknown Macro",
+                    img: "icons/svg/hazard.svg",
+                    enrichedLink: `<span class="broken-link"><i class="fas fa-unlink"></i> Broken Link</span>`
+                });
+            }
+        }
 
         return {
             icon: this.noteDocument.texture?.src || "icons/svg/dice-target.svg",
             name: flags.name || "",
-            linkedMacroName: macro?.name || "Unknown",
+            linkedMacros: linkedMacros,
+            hasMacros: linkedMacros.length > 0,
             showName: flags.showName || "always",
             namePosition: flags.namePosition || "bottom",
             buttonSize: flags.buttonSize || "small",
@@ -512,6 +566,66 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
         };
     }
 
+    _onRender(context, options) {
+        super._onRender(context, options);
+
+        // Set up drag and drop for the entire dialog
+        const dropZone = this.element.querySelector('.linked-macros-section');
+        if (dropZone) {
+            dropZone.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+
+            dropZone.addEventListener('dragleave', (event) => {
+                dropZone.classList.remove('drag-over');
+            });
+
+            dropZone.addEventListener('drop', async (event) => {
+                event.preventDefault();
+                dropZone.classList.remove('drag-over');
+
+                // Parse the drop data
+                let data;
+                try {
+                    data = JSON.parse(event.dataTransfer.getData('text/plain'));
+                } catch (e) {
+                    return;
+                }
+
+                if (data.type !== "Macro") {
+                    ui.notifications.warn("Only macros can be dropped here.");
+                    return;
+                }
+
+                const macro = await fromUuid(data.uuid);
+                if (!macro) {
+                    ui.notifications.error("Could not find the dropped macro.");
+                    return;
+                }
+
+                // Check if already linked
+                const flags = this.noteDocument.flags[MODULE_ID];
+                const macroUuids = getMacroUuids(flags);
+                if (macroUuids.includes(data.uuid)) {
+                    ui.notifications.warn("This macro is already linked to this button.");
+                    return;
+                }
+
+                // Add to list
+                const newUuids = [...macroUuids, data.uuid];
+                await this.noteDocument.update({
+                    [`flags.${MODULE_ID}.macroUuids`]: newUuids,
+                    [`flags.${MODULE_ID}.-=macroUuid`]: null // Remove old single uuid field if present
+                });
+
+                // Re-render
+                this.render();
+                ui.notifications.info(`Linked macro: ${macro.name}`);
+            });
+        }
+    }
+
     static async #onPickImage(event, target) {
         const current = this.element.querySelector('input[name="icon"]').value;
 
@@ -530,9 +644,10 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
 
     static async #onResetIcon(event, target) {
         const flags = this.noteDocument.flags[MODULE_ID];
-        const macro = await fromUuid(flags.macroUuid);
+        const macroUuids = getMacroUuids(flags);
+        const macro = macroUuids.length > 0 ? await fromUuid(macroUuids[0]) : null;
         if (!macro) {
-            ui.notifications.error("Linked macro not found.");
+            ui.notifications.error("No linked macro found.");
             return;
         }
 
@@ -545,15 +660,38 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
 
     static async #onResetName(event, target) {
         const flags = this.noteDocument.flags[MODULE_ID];
-        const macro = await fromUuid(flags.macroUuid);
+        const macroUuids = getMacroUuids(flags);
+        const macro = macroUuids.length > 0 ? await fromUuid(macroUuids[0]) : null;
         if (!macro) {
-            ui.notifications.error("Linked macro not found.");
+            ui.notifications.error("No linked macro found.");
             return;
         }
 
         this.element.querySelector('input[name="name"]').value = macro.name;
         this.element.querySelector('input[name="customName"]').value = "false";
         this.element.querySelector('[data-action="resetName"]')?.classList.add("hidden");
+    }
+
+    static async #onUnlinkMacro(event, target) {
+        const uuid = target.dataset.uuid;
+        if (!uuid) return;
+
+        const flags = this.noteDocument.flags[MODULE_ID];
+        const macroUuids = getMacroUuids(flags);
+        const newUuids = macroUuids.filter(u => u !== uuid);
+
+        // Update the document
+        await this.noteDocument.update({
+            [`flags.${MODULE_ID}.macroUuids`]: newUuids,
+            [`flags.${MODULE_ID}.-=macroUuid`]: null // Remove old single uuid field if present
+        });
+
+        // Re-render the dialog
+        this.render();
+
+        // Notify
+        const macro = await fromUuid(uuid);
+        ui.notifications.info(`Unlinked macro: ${macro?.name || uuid}`);
     }
 
     static async #onSave(event, target) {

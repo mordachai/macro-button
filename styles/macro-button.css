@@ -109,3 +109,110 @@
 .macro-button-config .form-footer .delete-btn {
     color: #ff4444;
 }
+
+/* Linked Macros Section */
+.macro-button-config .linked-macros-section {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 2px dashed rgba(121, 121, 121, 0.5);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.macro-button-config .linked-macros-section.drag-over {
+    border-color: #ff6400;
+    background: rgba(255, 100, 0, 0.1);
+    box-shadow: inset 0 0 10px rgba(255, 100, 0, 0.2);
+}
+
+.macro-button-config .linked-macros-section > label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #4b4a44;
+}
+
+.macro-button-config .linked-macros-section > label i {
+    margin-right: 5px;
+}
+
+.macro-button-config .linked-macros-list {
+    min-height: 30px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.macro-button-config .linked-macro-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    margin-bottom: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.macro-button-config .linked-macro-item:last-child {
+    margin-bottom: 0;
+}
+
+.macro-button-config .linked-macro-item .macro-link {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.macro-button-config .linked-macro-item .macro-link a.content-link {
+    white-space: nowrap;
+}
+
+.macro-button-config .unlink-btn {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin-left: 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    background: rgba(255, 68, 68, 0.2);
+    border: 1px solid rgba(255, 68, 68, 0.4);
+    color: #ff4444;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.macro-button-config .unlink-btn:hover {
+    background: #ff4444;
+    border-color: #ff4444;
+    color: white;
+}
+
+.macro-button-config .no-macros-hint {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+}
+
+.macro-button-config .drop-hint {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(121, 121, 121, 0.3);
+    font-size: 0.85em;
+    color: #666;
+    text-align: center;
+}
+
+.macro-button-config .drop-hint i {
+    margin-right: 4px;
+}
+
+.macro-button-config .broken-link {
+    color: #ff4444;
+    font-style: italic;
+}
+
+.macro-button-config .broken-link i {
+    margin-right: 4px;
+}
