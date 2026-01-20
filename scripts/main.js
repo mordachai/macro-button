@@ -321,8 +321,11 @@ Hooks.on("refreshNote", (note) => {
             // GM in Notes layer can select/move without executing
             if (game.user.isGM && canvas.activeLayer === canvas.notes) return;
 
+            // Get fresh flags data (not the cached reference from when listener was bound)
+            const currentFlags = note.document.flags?.[MODULE_ID];
+
             // Check player permission
-            if (!game.user.isGM && !flags.playerVisible) {
+            if (!game.user.isGM && !currentFlags?.playerVisible) {
                 ui.notifications.warn("You don't have permission to use this macro button.");
                 return;
             }
@@ -330,7 +333,7 @@ Hooks.on("refreshNote", (note) => {
             event.stopPropagation();
 
             // Execute all linked macros
-            const macroUuids = getMacroUuids(flags);
+            const macroUuids = getMacroUuids(currentFlags || {});
             if (macroUuids.length === 0) {
                 ui.notifications.warn("No macros linked to this button.");
                 return;
