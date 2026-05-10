@@ -13,10 +13,7 @@ const NAME_SIZES = {
     big: 60
 };
 
-// Register Handlebars helper for equality check
 Hooks.once("init", () => {
-    Handlebars.registerHelper("eq", (a, b) => a === b);
-
     // Register module settings for default values
     game.settings.register(MODULE_ID, "defaultShowName", {
         name: "Default Show Name",
@@ -515,7 +512,7 @@ class MacroButtonConfig extends HandlebarsApplicationMixin(ApplicationV2) {
             const macro = await fromUuid(uuid);
             if (macro) {
                 // Create enriched content link using TextEditor
-                const enrichedLink = await TextEditor.enrichHTML(`@UUID[${uuid}]`, { async: true });
+                const enrichedLink = await TextEditor.enrichHTML(`@UUID[${uuid}]`);
                 linkedMacros.push({
                     uuid: uuid,
                     name: macro.name,
