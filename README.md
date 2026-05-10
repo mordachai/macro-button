@@ -1,8 +1,8 @@
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01A1ZN1)
-
 # Macro Button
 
-![Foundry v13](https://img.shields.io/badge/foundry-v13-green?style=for-the-badge) ![Github All Releases](https://img.shields.io/github/downloads/mordachai/macro-button/total.svg?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/mordachai/macro-button?display_name=tag&style=for-the-badge&label=Current%20version)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01A1ZN1)
+
+![Foundry v13](https://img.shields.io/badge/foundry-v13-green?style=for-the-badge) ![Foundry v14](https://img.shields.io/badge/foundry-v14-blue?style=for-the-badge)  ![Github All Releases](https://img.shields.io/github/downloads/mordachai/vagabond/total.svg?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/mordachai/macro-button?display_name=tag&style=for-the-badge&label=Current%20version)  [![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fmacro-buttond&color=bf360c&style=for-the-badge)](https://forge-vtt.com/bazaar/package/vagabond)
 
 **Macro Button** is a module for Foundry VTT that allows you to drag and drop Macros directly onto the canvas to create interactive buttons. These buttons act as shortcuts, allowing you (and optionally your players) to trigger macros directly from the scene. I've picked the idea for it from this old module: https://github.com/Kekilla0/Note-Macro seemed like a good solution.
 
